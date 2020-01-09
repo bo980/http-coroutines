@@ -5,21 +5,21 @@ interface Request {
 
     var baseUrl: String
 
-    suspend fun<T> post(
+    suspend fun post(
         tag: String,
         url: String,
         api: String,
         headers: Map<String, String> = HashMap(),
         params: Any?
-    ): T
+    ): Response
 
-    suspend fun<T> get(
+    suspend fun get(
         tag: String,
         url: String,
         api: String,
         headers: Map<String, String> = HashMap(),
         params: Map<String, String> = HashMap()
-    ): T
+    ): Response
 
     fun cancel(tag: String)
 }

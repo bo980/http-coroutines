@@ -6,7 +6,7 @@ import com.liang.http.coroutines.launchAsync
 import kotlinx.coroutines.runBlocking
 
 
-private var Application.request: Request?
+var Application.request: Request?
     get() {
         return Http.request
     }
@@ -18,53 +18,53 @@ private object Http {
     var request: Request? = null
 }
 
-suspend fun <T> Any.httpGet(
+suspend fun Any.httpGet(
     tag: String = this::class.java.simpleName,
     url: String = Http.request?.baseUrl ?: "",
     api: String = "",
     headers: Map<String, String> = HashMap(),
     params: Map<String, String> = HashMap()
-): T? {
+): Response? {
     return Http.request?.get(tag, url, api, headers, params)
 }
 
-fun <T> Any.httpGet(
+fun Any.httpGet(
     tag: String = this::class.java.simpleName,
     url: String = Http.request?.baseUrl ?: "",
     api: String = "",
     headers: Map<String, String> = HashMap(),
     params: Map<String, String> = HashMap(),
-    action: (response: T?) -> Unit
+    action: (response: Response?) -> Unit
 ) {
     runBlocking {
         val response = launchAsync {
-            httpGet<T>(tag, url, api, headers, params)
+            httpGet(tag, url, api, headers, params)
         }
         action(response.await())
     }
 }
 
-suspend fun <T> Any.httpPost(
+suspend fun Any.httpPost(
     tag: String = this::class.java.simpleName,
     url: String = Http.request?.baseUrl ?: "",
     api: String = "",
     headers: Map<String, String> = HashMap(),
     params: Any?
-): T? {
+): Response? {
     return Http.request?.post(tag, url, api, headers, params)
 }
 
-fun <T> Any.httpPost(
+fun Any.httpPost(
     tag: String = this::class.java.simpleName,
     url: String = Http.request?.baseUrl ?: "",
     api: String = "",
     headers: Map<String, String> = HashMap(),
     params: Any?,
-    action: (response: T?) -> Unit
+    action: (response: Response?) -> Unit
 ) {
     launch {
         val response = launchAsync {
-            httpPost<T>(tag, url, api, headers, params)
+            httpPost(tag, url, api, headers, params)
         }
         action(response.await())
     }
